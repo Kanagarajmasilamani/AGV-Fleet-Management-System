@@ -1,0 +1,41 @@
+
+
+<launch>
+
+    <node pkg="tf" type="static_transform_publisher" name="link_one" args="0 0 0 0 0 0 /map /odom_one 100"/>
+
+    <arg name="frame1" value="robot_one" />
+    <arg name="frame2" value="robot_one" />
+    <arg name="frame3" value="map" />
+    <arg name="frame4" value="odom_one" />
+    <arg name="frame5" value="lidar_one" />
+    <arg name="frame6" value="lidar_one" />
+    <arg name="frame7" value="/hokuyo_one" />
+    <arg name="frame8" value="/hokuyo_one" />
+    <arg name="cmd_vel" value="/robot/twist_one" />
+    <arg name="odom" value="odom_one" />
+
+    <node name="move_base" pkg="move_base" type="move_base" output="screen">
+        <rosparam file="$(find tutorials)/param/costmap_common_param_1.yaml" command="load" ns="global_costmap" />
+        <rosparam file="$(find tutorials)/param/costmap_common_param_1.yaml" command="load" ns="local_costmap" />
+        <rosparam file="$(find tutorials)/param/local_costmap_param.yaml" command="load" />
+        <rosparam file="$(find tutorials)/param/global_costmap_param_1.yaml" command="load" />
+        <rosparam file="$(find tutorials)/param/dwa_local_planner_1.yaml" command="load" /> 
+        <rosparam file="$(find tutorials)/param/global_planner_1.yaml" command="load" />
+        <rosparam file="$(find tutorials)/param/move_base_param_1.yaml" command="load" />
+        <param name="local_costmap/robot_base_frame" value="$(arg frame1)" />
+        <param name="global_costmap/robot_base_frame" value="$(arg frame2)" />
+        <param name="global_costmap/global_frame" value="$(arg frame3)" />
+        <param name="local_costmap/global_frame" value="$(arg frame4)" />
+        <param name="local_costmap/obstacle_layer/scan/sensor_frame" value="$(arg frame5)" />
+        <param name="global_costmap/obstacle_layer/scan/sensor_frame" value="$(arg frame6)" />
+        <param name="local_costmap/obstacle_layer/scan/topic" value="$(arg frame7)" />
+        <param name="global_costmap/obstacle_layer/scan/topic" value="$(arg frame8)" />
+        <param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS"/>
+        <param name="dwa_local_planner/DWAPlannerROS/odom_topic" value="$(arg odom)" />
+        <!--<remap to="$(arg cmd_vel)" from="/cmd_vel" />
+        <remap to="$(arg odom)" from="odom" />
+        <remap to="/map" from="map" />-->
+    </node>
+
+</launch>

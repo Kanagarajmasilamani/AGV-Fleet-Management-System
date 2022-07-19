@@ -1,0 +1,22 @@
+<launch>
+<arg name="first" default="robot"/>
+<arg name="second" default="robot_two"/>
+<node name="map_server" pkg="map_server" type="map_server" args="$(find tutorials)/map/map.yaml" >
+<param name="frame_id" value="map" />
+</node>
+<group ns ="$(arg first)">
+<param name="tf_prefix" value="$(arg first)"/>
+<include file="$(find tutorials)/launch/amcl1.launch"/>
+<include file="$(find tutorials)/launch/nav1.launch"/>
+</group>
+<group ns ="$(arg second)">
+<param name="tf_prefix" value="$(arg second)"/>
+<include file="$(find tutorials)/launch/amcl2.launch"/>
+<include file="$(find tutorials)/launch/nav2.launch"/>
+</group>
+<!--<node pkg="tf" type="static_transform_publisher" name="robot_link" args="0 0 0 0 0 0 /robot/map /odom 100"/>
+<node pkg="tf" type="static_transform_publisher" name="link" args="0 0 0 0 0 0 /robot_two/map /odom_one 100"/>-->
+<remap to="/map" from="/robot/map" />
+<remap to="/map" from="/robot_two/map" />
+<remap to="/robot/move_base_simple/goal" from="/goal" />
+</launch>
